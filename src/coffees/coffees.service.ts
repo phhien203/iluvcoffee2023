@@ -7,6 +7,7 @@ export class CoffeesService {
     {
       id: 1,
       name: 'Rambusta',
+      brand: 'Trung Nguyen',
       flavors: ['chocolate', 'vanilla'],
     },
   ];
