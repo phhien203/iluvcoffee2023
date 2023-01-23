@@ -12,6 +12,7 @@ import { TimeoutInterceptor } from '../../src/common/interceptors/timeout/timeou
 import { WrapResponseInterceptor } from '../../src/common/interceptors/wrap-response/wrap-response.interceptor';
 import { CoffeesModule } from '../../src/coffees/coffees.module';
 import { CreateCoffeeDto } from '../../src/coffees/dto/create-coffee.dto';
+import { UpdateCoffeeDto } from 'src/coffees/dto/update-coffee.dto';
 
 describe('[Feature Coffees] - /coffees', () => {
   let app: INestApplication;
@@ -81,9 +82,47 @@ describe('[Feature Coffees] - /coffees', () => {
     expect(body.data.length).toBeGreaterThan(0);
     expect(body.data[0]).toEqual(expectedPartialCoffee);
   });
-  it.todo('Get One [GET /:id]');
-  it.todo('Update One [PATCH /:id]');
-  it.todo('Delete One [DELETE /:id]');
+
+  it('Get One [GET /:id]', async () => {
+    return request(httpServer)
+      .get('/coffees/1')
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.data).toEqual(expectedPartialCoffee);
+      });
+  });
+
+  it('Update One [PATCH /:id]', () => {
+    const updateCoffeeDto: UpdateCoffeeDto = {
+      ...coffee,
+      name: 'New coffee name',
+    };
+
+    return request(httpServer)
+      .patch('/coffees/1')
+      .send(updateCoffeeDto)
+      .then(({ body }) => {
+        console.log(body.data);
+        expect(body.data.name).toEqual(updateCoffeeDto.name);
+
+        return request(httpServer)
+          .get('/coffees/1')
+          .then(({ body }) => {
+            expect(body.data.name).toEqual(updateCoffeeDto.name);
+          });
+      });
+  });
+
+  it('Delete One [DELETE /:id]', () => {
+    return request(httpServer)
+      .delete('/coffees/1')
+      .expect(HttpStatus.OK)
+      .then(() => {
+        return request(httpServer)
+          .get('/coffees/1')
+          .expect(HttpStatus.NOT_FOUND);
+      });
+  });
 
   afterAll(async () => {
     await app.close();
