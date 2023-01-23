@@ -67,16 +67,20 @@ describe('[Feature Coffees] - /coffees', () => {
     httpServer = app.getHttpServer();
   });
 
-  it('Create [POST /]', () => {
-    return request(httpServer)
+  it('Create [POST /]', async () => {
+    const { body } = await request(httpServer)
       .post('/coffees')
       .send(coffee as CreateCoffeeDto)
-      .expect(HttpStatus.CREATED)
-      .then(({ body }) => {
-        expect(body.data).toEqual(expectedPartialCoffee);
-      });
+      .expect(HttpStatus.CREATED);
+    expect(body.data).toEqual(expectedPartialCoffee);
   });
-  it.todo('Get All [GET /]');
+
+  it('Get All [GET /]', async () => {
+    const { body } = await request(httpServer).get('/coffees');
+    console.log(body);
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data[0]).toEqual(expectedPartialCoffee);
+  });
   it.todo('Get One [GET /:id]');
   it.todo('Update One [PATCH /:id]');
   it.todo('Delete One [DELETE /:id]');
