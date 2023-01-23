@@ -12,6 +12,9 @@ export class Coffee {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: 0 })
+  recommend: number;
+
   @Column()
   name: string;
 
