@@ -19,7 +19,6 @@ export class CoffeesService {
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
     private readonly dataSource: DataSource,
-    @Inject(COFFEE_BRANDS) private readonly brands: string[],
     @Inject(coffeesConfig.KEY)
     private coffeesConfiguration: ConfigType<typeof coffeesConfig>,
   ) {
@@ -27,28 +26,28 @@ export class CoffeesService {
     console.log('CoffeesService instantiated');
   }
 
-  async recommendCoffee(coffee: Coffee) {
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      coffee.recommend++;
+  // async recommendCoffee(coffee: Coffee) {
+  //   const queryRunner = this.dataSource.createQueryRunner();
+  //   await queryRunner.connect();
+  //   await queryRunner.startTransaction();
+  //   try {
+  //     coffee.recommend++;
 
-      const event = new Event();
-      event.name = 'recommend_coffee';
-      event.type = 'coffee';
-      event.payload = { coffee: coffee.id };
+  //     const event = new Event();
+  //     event.name = 'recommend_coffee';
+  //     event.type = 'coffee';
+  //     event.payload = { coffee: coffee.id };
 
-      await queryRunner.manager.save(coffee);
-      await queryRunner.manager.save(event);
+  //     await queryRunner.manager.save(coffee);
+  //     await queryRunner.manager.save(event);
 
-      queryRunner.commitTransaction();
-    } catch (err) {
-      queryRunner.rollbackTransaction();
-    } finally {
-      queryRunner.release();
-    }
-  }
+  //     queryRunner.commitTransaction();
+  //   } catch (err) {
+  //     queryRunner.rollbackTransaction();
+  //   } finally {
+  //     queryRunner.release();
+  //   }
+  // }
 
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
