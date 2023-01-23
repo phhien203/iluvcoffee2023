@@ -15,6 +15,7 @@ export class ApiKeyGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    console.log('ApiKeyGuard');
     return this.isPublicRoute(context) || this.hasApiKey(context);
   }
 
