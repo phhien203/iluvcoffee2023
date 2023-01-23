@@ -15,12 +15,14 @@ export class ApiKeyGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const isPublic = this.reflector.get(IS_PUBLIC_KEY, context.getHandler());
+    return this.isPublicRoute(context) || this.hasApiKey(context);
+  }
 
-    if (isPublic) {
-      return true;
-    }
+  private isPublicRoute(context: ExecutionContext): boolean {
+    return this.reflector.get(IS_PUBLIC_KEY, context.getHandler());
+  }
 
+  private hasApiKey(context: ExecutionContext): boolean {
     const ctx = context.switchToHttp();
     const authHeader = ctx.getRequest<Request>().header('Authorization');
     return authHeader === this.configService.get('API_KEY');
