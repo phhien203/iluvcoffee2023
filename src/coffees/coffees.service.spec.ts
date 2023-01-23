@@ -61,6 +61,10 @@ describe('CoffeesService', () => {
       const coffee = await service.findOne(fakeCoffeeId);
 
       // THEN
+      expect(mockCoffeeRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+        relations: { flavors: true },
+      });
       expect(coffee).toEqual(expectedCoffee);
     });
 
